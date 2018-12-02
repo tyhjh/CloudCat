@@ -71,6 +71,22 @@ captures/
 .idea/libraries
 .idea/caches
 
+.idea/libraries/
+.idea/.name
+.idea/compiler.xml
+.idea/copyright/profiles_settings.xml
+.idea/encodings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/scopes/scope_settings.xml
+.idea/vcs.xml
+.classpath
+.project
+
+.idea
+#.idea/workspace.xml - remove # and delete .idea if it better suit your needs.
+.gradle
+
 # Keystore files
 # Uncomment the following line if you do not want to check your keystore files in.
 #*.jks
@@ -93,4 +109,3 @@ fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
 
-.idea/vcs.xml
