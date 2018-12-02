@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CloudCat</string>
+    <string name="uploadPicOk">图片上传成功</string>
+</resources>
