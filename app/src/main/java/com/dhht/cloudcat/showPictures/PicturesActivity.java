@@ -93,7 +93,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 PicturePickUtil.pickByCamera(PicturesActivity.this, new OnPickListener() {
                     @Override
                     public void pickPicture(File file) {
-                        mPresenter.addPic(file);
+                        mPresenter.addPic(file, mPictureAdapter.getDatas());
                     }
                 });
             }
@@ -105,7 +105,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 PicturePickUtil.pickByAlbum(PicturesActivity.this, new OnPickListener() {
                     @Override
                     public void pickPicture(File file) {
-                        mPresenter.addPic(file);
+                        mPresenter.addPic(file, mPictureAdapter.getDatas());
                     }
                 });
             }
@@ -131,7 +131,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                             .into(imageView);
                 } else {
                     Glide.with(PicturesActivity.this)
-                            .load(picture.getRemotePath())
+                            .load(picture.getRemoteMiniPath())
                             .apply(GlileUtil.getListPicOption(leath, (int) (leath * 0.98)))
                             .into(imageView);
                 }
@@ -166,6 +166,14 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     public void addPic(Picture picture) {
         mPictureAdapter.insertData(0, picture);
     }
+
+    @Override
+    public void addPicFail(String msg) {
+        SnackbarUtil.ShortSnackbar(iv_avatar, msg,
+                getResources().getColor(R.color.white),
+                getResources().getColor(R.color.colorPrimary)).show();
+    }
+
 
     @Override
     public void uploadPicFinish() {

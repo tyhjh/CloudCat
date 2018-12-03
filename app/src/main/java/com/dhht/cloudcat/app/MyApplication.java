@@ -21,3 +21,12 @@ public class MyApplication extends Application {
         InternetUtil.init(this);
     }
 }
+/**
+ *
+ * 查看大图
+ * 下载
+ * 分享链接
+ *tag标签
+ *
+ *
+ */
