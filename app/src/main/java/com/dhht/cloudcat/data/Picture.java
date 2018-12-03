@@ -30,10 +30,15 @@ public class Picture {
     @Nullable
     private String remotePath;//远程地址
 
+    //文件缩略图
+    private String remoteMiniPath;
+
     public Picture(MyFile myFile) {
         mId = myFile.getMyFileId();
         localPath = myFile.getLocalPath();
         remotePath = myFile.getFileUrl();
+        remoteMiniPath = myFile.getFileMiniUrl();
+        name = myFile.getFileName();
     }
 
     public Picture() {
@@ -114,6 +119,19 @@ public class Picture {
         if (picture != null && mId.equals(picture.mId)) {
             return true;
         }
+
+        if (picture != null && localPath.equals(picture.localPath)) {
+            return true;
+        }
         return false;
+    }
+
+
+    public String getRemoteMiniPath() {
+        return remoteMiniPath;
+    }
+
+    public void setRemoteMiniPath(String remoteMiniPath) {
+        this.remoteMiniPath = remoteMiniPath;
     }
 }

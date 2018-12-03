@@ -35,20 +35,20 @@ public class PictureRemoteDataSource implements PictureDataSource {
 
     @Override
     public void getPics(String userId, final GetPicsCallback getPicsCallback) {
-        retrofiteApi.getFiles(userId).enqueue(new Callback<List<MyFile>>() {
+        retrofiteApi.getFiles(userId).enqueue(new Callback<Result<List<MyFile>>>() {
             @Override
-            public void onResponse(Call<List<MyFile>> call, Response<List<MyFile>> response) {
+            public void onResponse(Call<Result<List<MyFile>>> call, Response<Result<List<MyFile>>> response) {
                 List<Picture> pictureList = new ArrayList<>();
-                List<MyFile> myFiles = response.body();
+                List<MyFile> myFiles = response.body().getData();
                 for (MyFile myFile : myFiles) {
-                    Picture picture=new Picture(myFile);
+                    Picture picture = new Picture(myFile);
                     pictureList.add(picture);
                 }
                 getPicsCallback.onPicGet(pictureList);
             }
 
             @Override
-            public void onFailure(Call<List<MyFile>> call, Throwable t) {
+            public void onFailure(Call<Result<List<MyFile>>> call, Throwable t) {
                 LogUtils.e(t.getMessage());
             }
         });
@@ -57,15 +57,14 @@ public class PictureRemoteDataSource implements PictureDataSource {
 
     @Override
     public void deletePic(Long picId) {
-        retrofiteApi.deleteFile(picId).enqueue(new Callback<Result>() {
+        retrofiteApi.deleteFile(picId).enqueue(new Callback<Result<String>>() {
             @Override
-            public void onResponse(Call<Result> call, Response<Result> response) {
+            public void onResponse(Call<Result<String>> call, Response<Result<String>> response) {
 
             }
 
             @Override
-            public void onFailure(Call<Result> call, Throwable t) {
-
+            public void onFailure(Call<Result<String>> call, Throwable t) {
             }
         });
     }
@@ -77,20 +76,22 @@ public class PictureRemoteDataSource implements PictureDataSource {
         RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("myFile", file.getName(), body);
 
-        retrofiteApi.uploadFile(picture.getId(), picture.getLocalPath(), "Tyhj", "picture", part).enqueue(new Callback<MyFile>() {
+        retrofiteApi.uploadFile(picture.getId(), picture.getLocalPath(), "Tyhj", "picture", part).enqueue(new Callback<Result<MyFile>>() {
             @Override
-            public void onResponse(Call<MyFile> call, Response<MyFile> response) {
-                MyFile myFile1 = response.body();
+            public void onResponse(Call<Result<MyFile>> call, Response<Result<MyFile>> response) {
+                Result<MyFile> myFileResult = response.body();
+                MyFile myFile1 = myFileResult.getData();
                 picture.setRemotePath(myFile1.getFileUrl());
-                if(savePicCallBack!=null){
+                picture.setRemoteMiniPath(myFile1.getFileMiniUrl());
+                if (savePicCallBack != null) {
                     savePicCallBack.onSavePic(picture);
                 }
                 LogUtils.e("上传图片成功");
             }
 
             @Override
-            public void onFailure(Call<MyFile> call, Throwable t) {
-                LogUtils.e("上传图片失败"+t.getMessage());
+            public void onFailure(Call<Result<MyFile>> call, Throwable t) {
+                LogUtils.e("上传图片失败" + t.getMessage());
             }
         });
     }

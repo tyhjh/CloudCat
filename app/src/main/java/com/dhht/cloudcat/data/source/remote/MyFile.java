@@ -24,6 +24,10 @@ public class MyFile {
 
     private String fileType;
 
+    //文件缩略图
+    private String fileMiniUrl;
+
+
     private double fileSize;
 
     private String fileTag;
@@ -100,6 +104,14 @@ public class MyFile {
 
     public void setLocalPath(String localPath) {
         this.localPath = localPath;
+    }
+
+    public String getFileMiniUrl() {
+        return fileMiniUrl;
+    }
+
+    public void setFileMiniUrl(String fileMiniUrl) {
+        this.fileMiniUrl = fileMiniUrl;
     }
 }
 

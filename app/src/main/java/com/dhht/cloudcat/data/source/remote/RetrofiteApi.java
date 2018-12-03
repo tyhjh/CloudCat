@@ -25,11 +25,11 @@ public interface RetrofiteApi {
 
     @POST("file")
     @Multipart
-    Call<MyFile> uploadFile(@Query("myFileId") Long myFileId,
-                            @Query("localPath") String localPath,
-                            @Query("userId") String userId,
-                            @Query("fileTag") String fileTag,
-                            @Part MultipartBody.Part pictureFile);
+    Call<Result<MyFile>> uploadFile(@Query("myFileId") Long myFileId,
+                                    @Query("localPath") String localPath,
+                                    @Query("userId") String userId,
+                                    @Query("fileTag") String fileTag,
+                                    @Part MultipartBody.Part pictureFile);
 
 
     /**
@@ -39,7 +39,7 @@ public interface RetrofiteApi {
      * @return
      */
     @GET("files")
-    Call<List<MyFile>> getFiles(@Query("userId") String userId);
+    Call<Result<List<MyFile>>> getFiles(@Query("userId") String userId);
 
     /**
      * 删除文件
@@ -48,6 +48,6 @@ public interface RetrofiteApi {
      * @return
      */
     @DELETE("file")
-    Call<Result> deleteFile(@Query("myFileId") Long myFileId);
+    Call<Result<String>> deleteFile(@Query("myFileId") Long myFileId);
 
 }

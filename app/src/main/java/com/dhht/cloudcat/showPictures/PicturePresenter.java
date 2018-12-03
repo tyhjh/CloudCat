@@ -36,7 +36,7 @@ public class PicturePresenter implements PicturesContract.Presenter {
                     public void onPicGet(List<Picture> remotePictureList) {
                         for (Picture picture : remotePictureList) {
                             if (!localPictureList.contains(picture)) {
-                                localPictureList.add(picture);
+                                localPictureList.add(0, picture);
                                 mPictureRepository.getLocalDataSource().savePic(picture, null);
                             }
                         }
@@ -53,8 +53,12 @@ public class PicturePresenter implements PicturesContract.Presenter {
     }
 
     @Override
-    public void addPic(File file) {
+    public void addPic(File file, List<Picture> pictureList) {
         final Picture picture = new Picture(file);
+        if (pictureList.contains(picture)) {
+            mPicturesActivity.addPicFail("图片已存在");
+            return;
+        }
         mPicturesActivity.addPic(picture);
         mPictureRepository.savePic(picture, new PictureDataSource.SavePicCallBack() {
             @Override

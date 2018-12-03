@@ -19,6 +19,9 @@ public interface PicturesContract {
         //添加本地图片
         void addPic(Picture picture);
 
+        //添加图片失败
+        void addPicFail(String msg);
+
         //上传图片成功
         void uploadPicFinish();
     }
@@ -32,7 +35,7 @@ public interface PicturesContract {
         void deletePic(Picture picture);
 
         //添加本地图片
-        void addPic(File file);
+        void addPic(File file,List<Picture> pictureList);
 
         //上传图片
         void uploadAllPic(List<Picture> pictureList);

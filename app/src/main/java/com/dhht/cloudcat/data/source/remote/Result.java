@@ -1,9 +1,18 @@
 package com.dhht.cloudcat.data.source.remote;
 
-public class Result {
-    int  code;
-    String msg;
-    String data;
+public class Result<T> {
+    private int code;
+    private String msg;
+    private T data;
+
+    public Result() {
+    }
+
+    public Result(int code, String msg, T data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
 
     public int getCode() {
         return code;
@@ -21,11 +30,12 @@ public class Result {
         this.msg = msg;
     }
 
-    public String getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(T data) {
         this.data = data;
     }
 }
+
