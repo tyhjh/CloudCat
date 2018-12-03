@@ -6,12 +6,7 @@ import android.text.TextUtils;
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.data.source.PictureRepository;
-import com.dhht.cloudcat.data.source.local.AppDataBase;
-import com.dhht.cloudcat.data.source.local.PictureLocalDataSource;
-import com.dhht.cloudcat.util.AppExecutors;
 import com.dhht.cloudcat.util.InternetUtil;
-import com.yorhp.picturepick.OnPickListener;
-import com.yorhp.picturepick.PicturePickUtil;
 
 import java.io.File;
 import java.util.List;
@@ -75,7 +70,12 @@ public class PicturePresenter implements PicturesContract.Presenter {
         if (InternetUtil.isWifi()) {
             for (Picture picture : pictureList) {
                 if (TextUtils.isEmpty(picture.getRemotePath())) {
-                    mPictureRepository.savePic(picture, null);
+                    mPictureRepository.savePic(picture, new PictureDataSource.SavePicCallBack() {
+                        @Override
+                        public void onSavePic(Picture newPicture) {
+                            mPictureRepository.uploadPic(newPicture);
+                        }
+                    });
                 }
             }
         }
