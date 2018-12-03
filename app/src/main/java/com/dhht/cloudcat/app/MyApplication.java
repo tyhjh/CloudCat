@@ -3,6 +3,7 @@ package com.dhht.cloudcat.app;
 import android.app.Application;
 
 import com.dhht.cloudcat.util.InternetUtil;
+import com.dhht.cloudcat.util.SharedPreferenceUtil;
 import com.yorhp.picturepick.PicturePickUtil;
 
 import log.LogUtils;
@@ -19,6 +20,7 @@ public class MyApplication extends Application {
         ToastUtil.init(this);
         LogUtils.init(IS_DEBUG, null);
         InternetUtil.init(this);
+        SharedPreferenceUtil.init(this);
     }
 }
 /**

@@ -1,6 +1,6 @@
 package com.dhht.cloudcat.showPictures;
 
-import android.Manifest;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,17 +8,17 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.data.Picture;
+import com.dhht.cloudcat.showBigPicture.BigPicturesActivity;
 import com.dhht.cloudcat.util.GlileUtil;
+import com.dhht.cloudcat.util.SharedPreferenceUtil;
 import com.example.bottomsheet.BottomFragment;
 import com.example.recyclelibrary.CommonAdapter;
 import com.example.recyclelibrary.CommonViewHolder;
@@ -29,8 +29,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import log.LogUtils;
-import permison.PermissonUtil;
 import snackBar.SnackbarUtil;
 import util.ScreenUtil;
 import util.UiUtil;
@@ -50,7 +48,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mPresenter = new PicturePresenter(this);
         mPresenter.getAllPic("Tyhj");
 
@@ -74,7 +71,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 } else {
                     spanCount++;
                 }
-
+                SharedPreferenceUtil.saveInt(getResources().getString(R.string.spanCount),spanCount);
                 rvPictures.setLayoutManager(new GridLayoutManager(PicturesActivity.this, spanCount));
             }
         });
@@ -117,6 +114,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
      * 初始化recyclerView
      */
     private void initRcycleView() {
+        spanCount = SharedPreferenceUtil.getIntValue(getResources().getString(R.string.spanCount));
         rvPictures = findViewById(R.id.rv_pictures);
         mPictureAdapter = new CommonAdapter<Picture>(this, new ArrayList<Picture>(0), R.layout.item_picture) {
             @Override
@@ -124,6 +122,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 ImageView imageView = commonViewHolder.getView(R.id.iv_pic);
                 int leath = ScreenUtil.SCREEN_WIDTH / spanCount;
                 imageView.setLayoutParams(new RelativeLayout.LayoutParams(leath, (int) (leath * 0.98)));
+
                 if (picture.getFile() != null) {
                     Glide.with(PicturesActivity.this)
                             .load(picture.getFile())
@@ -135,6 +134,18 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                             .apply(GlileUtil.getListPicOption(leath, (int) (leath * 0.98)))
                             .into(imageView);
                 }
+
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(PicturesActivity.this, BigPicturesActivity.class);
+                        BigPicturesActivity.setPictureList(mPictureAdapter.getDatas());
+                        BigPicturesActivity.setCurrenPosition(commonViewHolder.getAdapterPosition());
+                        startActivity(intent);
+
+                    }
+                });
+
                 imageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {

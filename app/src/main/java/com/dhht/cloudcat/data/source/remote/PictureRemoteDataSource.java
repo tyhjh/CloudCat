@@ -2,7 +2,6 @@ package com.dhht.cloudcat.data.source.remote;
 
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
-import com.dhht.cloudcat.util.AppExecutors;
 import com.dhht.cloudcat.util.MRetrofite;
 
 import java.io.File;
@@ -86,7 +85,6 @@ public class PictureRemoteDataSource implements PictureDataSource {
                 if (savePicCallBack != null) {
                     savePicCallBack.onSavePic(picture);
                 }
-                LogUtils.e("上传图片成功");
             }
 
             @Override
