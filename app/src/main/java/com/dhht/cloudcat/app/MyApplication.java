@@ -24,8 +24,7 @@ public class MyApplication extends Application {
     }
 }
 /**
- *
- * 查看大图
+ *activity切换动画
  * 下载
  * 分享链接
  *tag标签
