@@ -11,10 +11,10 @@ public class GlileUtil {
             .override(88, 88);
 
 
-    public static RequestOptions getListPicOption(int width, int height) {
+    public static RequestOptions getListPicOption() {
         return new RequestOptions()
                 .placeholder(R.color.whitesmoke)
                 .error(R.color.whitesmoke)
-                .override(width, height);
+                .dontAnimate();
     }
 }

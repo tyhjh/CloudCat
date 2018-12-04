@@ -40,7 +40,7 @@ public class InternetUtil {
     private static Application sApplication;
 
     public static void init(Application application) {
-        sApplication=application;
+        sApplication = application;
     }
 
     /**
@@ -66,16 +66,16 @@ public class InternetUtil {
             return false;
         }
     }
-    
+
     /**
      * 判断wifi是否连接状态
      */
     public static boolean isWifi() {
         ConnectivityManager cm = (ConnectivityManager) sApplication
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
-        return cm != null && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
+        return isOnline() && cm != null && cm.getActiveNetworkInfo().getType() == ConnectivityManager.TYPE_WIFI;
     }
-    
+
 
     /**
      * 判断手机连接的网络类型(2G,3G,4G)

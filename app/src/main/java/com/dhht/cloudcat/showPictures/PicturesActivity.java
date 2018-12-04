@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.showBigPicture.BigPicturesActivity;
@@ -40,6 +42,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     PicturesContract.Presenter mPresenter;
     private static int spanCount = 3;
     private static int spanCountMax = 10;
+    private static int BIG_PICTURE_ACTIVITY_RESULT = 5;
 
     ImageView iv_avatar;
 
@@ -60,8 +63,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
             }
         });
         iv_avatar = findViewById(R.id.iv_avatar);
-        Glide.with(PicturesActivity.this).load(R.drawable.ic_avatar_defult).into(iv_avatar);
-        UiUtil.setCircleShape(iv_avatar, 20);
+        Glide.with(PicturesActivity.this)
+                .load(R.drawable.ic_avatar_defult).
+                apply(RequestOptions.circleCropTransform())
+                .apply(GlileUtil.getListPicOption())
+                .into(iv_avatar);
 
         iv_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +77,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 } else {
                     spanCount++;
                 }
-                SharedPreferenceUtil.saveInt(getResources().getString(R.string.spanCount),spanCount);
+                SharedPreferenceUtil.saveInt(getResources().getString(R.string.spanCount), spanCount);
                 rvPictures.setLayoutManager(new GridLayoutManager(PicturesActivity.this, spanCount));
             }
         });
@@ -117,32 +123,32 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         spanCount = SharedPreferenceUtil.getIntValue(getResources().getString(R.string.spanCount));
         rvPictures = findViewById(R.id.rv_pictures);
         mPictureAdapter = new CommonAdapter<Picture>(this, new ArrayList<Picture>(0), R.layout.item_picture) {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onBindView(final CommonViewHolder commonViewHolder, final Picture picture) {
-                ImageView imageView = commonViewHolder.getView(R.id.iv_pic);
+                final ImageView imageView = commonViewHolder.getView(R.id.iv_pic);
                 int leath = ScreenUtil.SCREEN_WIDTH / spanCount;
-                imageView.setLayoutParams(new RelativeLayout.LayoutParams(leath, (int) (leath * 0.98)));
+                imageView.setLayoutParams(new RelativeLayout.LayoutParams(leath, leath));
 
                 if (picture.getFile() != null) {
                     Glide.with(PicturesActivity.this)
-                            .load(picture.getFile())
-                            .apply(GlileUtil.getListPicOption(leath, (int) (leath * 0.98)))
+                            .load(picture.getLocalPath())
+                            .apply(GlileUtil.getListPicOption())
                             .into(imageView);
                 } else {
                     Glide.with(PicturesActivity.this)
                             .load(picture.getRemoteMiniPath())
-                            .apply(GlileUtil.getListPicOption(leath, (int) (leath * 0.98)))
+                            .apply(GlileUtil.getListPicOption())
                             .into(imageView);
                 }
-
                 imageView.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(PicturesActivity.this, BigPicturesActivity.class);
                         BigPicturesActivity.setPictureList(mPictureAdapter.getDatas());
                         BigPicturesActivity.setCurrenPosition(commonViewHolder.getAdapterPosition());
                         startActivity(intent);
-
                     }
                 });
 
@@ -151,7 +157,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                     public boolean onLongClick(View view) {
                         mPresenter.deletePic(picture);
                         deletePic(commonViewHolder.getAdapterPosition());
-                        return true;
+                        return false;
                     }
                 });
             }

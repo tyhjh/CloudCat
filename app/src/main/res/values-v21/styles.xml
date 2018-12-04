@@ -8,6 +8,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="android:windowContentTransitions">true</item>
         <!--<item name="android:windowLightStatusBar">true</item>-->
 
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -15,4 +16,5 @@
         <item name="colorAccent">@color/colorAccent</item>
 
     </style>
+
 </resources>

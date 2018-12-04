@@ -6,6 +6,8 @@ import android.text.TextUtils;
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.data.source.PictureRepository;
+import com.dhht.cloudcat.util.AppExecutors;
+import com.dhht.cloudcat.util.ClipbordUtil;
 import com.dhht.cloudcat.util.InternetUtil;
 
 import java.io.File;
@@ -14,15 +16,14 @@ import java.util.List;
 public class PicturePresenter implements PicturesContract.Presenter {
 
     PictureRepository mPictureRepository;
-
     PicturesActivity mPicturesActivity;
+    AppExecutors mAppExecutors;
 
     public PicturePresenter(PicturesContract.View view) {
         mPicturesActivity = (PicturesActivity) view;
         mPictureRepository = new PictureRepository((Context) view);
-
+        mAppExecutors = new AppExecutors();
     }
-
 
     @Override
     public void getAllPic(final String userId) {
@@ -65,6 +66,7 @@ public class PicturePresenter implements PicturesContract.Presenter {
             public void onSavePic(Picture newPicture) {
                 mPictureRepository.uploadPic(newPicture);
                 mPicturesActivity.uploadPicFinish();
+                ClipbordUtil.copyTxt(newPicture.getRemotePath());
             }
         });
     }

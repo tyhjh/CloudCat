@@ -80,6 +80,8 @@ public class PictureRemoteDataSource implements PictureDataSource {
             public void onResponse(Call<Result<MyFile>> call, Response<Result<MyFile>> response) {
                 Result<MyFile> myFileResult = response.body();
                 MyFile myFile1 = myFileResult.getData();
+                if (myFile1 == null)
+                    return;
                 picture.setRemotePath(myFile1.getFileUrl());
                 picture.setRemoteMiniPath(myFile1.getFileMiniUrl());
                 if (savePicCallBack != null) {

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.dhht.cloudcat.R;
+import com.dhht.cloudcat.app.MyApplication;
 import com.dhht.cloudcat.showPictures.PicturesActivity;
 
 import permison.PermissonUtil;
@@ -30,6 +31,7 @@ public class WelcomeActivity extends AppCompatActivity {
         PermissonUtil.checkPermission(WelcomeActivity.this, new PermissionListener() {
             @Override
             public void havePermission() {
+                MyApplication.initDir();
                 startActivity(new Intent(WelcomeActivity.this, PicturesActivity.class));
                 finish();
             }

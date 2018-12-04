@@ -1,7 +1,9 @@
 package com.dhht.cloudcat.showBigPicture;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,24 +12,38 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.data.Picture;
+import com.dhht.cloudcat.util.ClipbordUtil;
+
+import snackBar.SnackbarUtil;
 
 
-public class ImgFragment extends Fragment {
+public class ImgFragment extends Fragment implements ImgContract.View {
     PinchImageView iv_action_img;
     Picture picture;
+    ImgPresenter imgPresenter;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        iv_action_img = (PinchImageView) inflater.inflate(R.layout.fragment_big_pic, null, false);
-        return iv_action_img;
+        View view = inflater.inflate(R.layout.fragment_big_pic, null, false);
+        iv_action_img = view.findViewById(R.id.iv_action_img);
+        imgPresenter = new ImgPresenter(this);
+        return view;
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+    }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        iv_action_img.setTransitionName("picture" + picture.getName());
         if (picture.getFile() != null) {
             Glide.with(getActivity())
-                    .load(picture.getFile())
+                    .load(picture.getLocalPath())
                     .into(iv_action_img);
         } else {
             Glide.with(getActivity())
@@ -35,17 +51,54 @@ public class ImgFragment extends Fragment {
                     .thumbnail(Glide.with(getActivity()).load(picture.getRemoteMiniPath()))
                     .into(iv_action_img);
         }
-
         iv_action_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                ClipbordUtil.copyTxt(picture.getRemotePath());
+                SnackbarUtil.ShortSnackbar(iv_action_img,
+                        "图片地址已复制到粘贴板",
+                        getResources().getColor(R.color.white),
+                        getResources().getColor(R.color.colorPrimary)).show();
             }
         });
-        super.onActivityCreated(savedInstanceState);
+
+        iv_action_img.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (picture.getFile() == null) {
+                    SnackbarUtil.snkbarWait(iv_action_img, "图片下载中");
+                    imgPresenter.downLoadFile(picture);
+                } else {
+                    SnackbarUtil.ShortSnackbar(iv_action_img,
+                            "图片地址为：" + picture.getLocalPath(),
+                            getResources().getColor(R.color.white),
+                            getResources().getColor(R.color.colorPrimary)).show();
+                }
+                return true;
+            }
+        });
+
     }
 
     public void setPictures(Picture picture) {
         this.picture = picture;
     }
+
+    @Override
+    public void downLoadFinish(String path) {
+        SnackbarUtil.ShortSnackbar(iv_action_img,
+                "下载完成，图片地址为：" + path,
+                getResources().getColor(R.color.white),
+                getResources().getColor(R.color.colorPrimary)).show();
+    }
+
+    @Override
+    public void downLoadFail() {
+        SnackbarUtil.ShortSnackbar(iv_action_img,
+                "图片下载失败^_^",
+                getResources().getColor(R.color.white),
+                getResources().getColor(R.color.colorPrimary)).show();
+    }
+
+
 }

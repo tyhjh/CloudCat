@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.dhht.cloudcat.app.MyApplication;
 import com.dhht.cloudcat.data.source.remote.MyFile;
 
 import java.io.File;
@@ -89,6 +90,11 @@ public class Picture {
             if (file.exists()) {
                 return file;
             }
+        }
+        File file = new File(MyApplication.appDir + name);
+        if (file.exists()) {
+            localPath = MyApplication.appDir + name;
+            return file;
         }
         return null;
     }
