@@ -32,7 +32,7 @@ public class PictureLocalDataSource implements PictureDataSource {
 
 
     @Override
-    public void getPics(String userId,final GetPicsCallback getPicsCallback) {
+    public void getPics(String userId, final GetPicsCallback getPicsCallback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -82,5 +82,17 @@ public class PictureLocalDataSource implements PictureDataSource {
         };
         mAppExecutors.diskIO().execute(runnable);
     }
+
+    @Override
+    public void deleteAllPic(String userId) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mPictureDao.deleteAllPic();
+            }
+        };
+        mAppExecutors.diskIO().execute(runnable);
+    }
+
 
 }

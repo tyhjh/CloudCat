@@ -168,9 +168,9 @@
     <color name="mediumblue">#0000cd</color> <!-- 中兰色 -->
     <color name="darkblue">#00008b</color> <!-- 暗蓝色 -->
     <color name="navy">#000080</color> <!-- 海军色 -->
-    <color name="black">#000000</color>
-    <color name="text_gray">#757575</color> <!-- 黑色 -->
-
+    <color name="black">#000000</color><!-- 黑色 -->
+    <color name="text_gray">#757575</color>
+    <color name="status_dark">#444444</color>
 
     <color name="triangle">#aa72d572</color>
     <color name="circle">#aa738ffe</color>

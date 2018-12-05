@@ -43,6 +43,11 @@ public class PictureRepository implements PictureDataSource {
         mLocalDataSource.uploadPic(picture);
     }
 
+    @Override
+    public void deleteAllPic(String userId) {
+        mLocalDataSource.deleteAllPic(userId);
+    }
+
     public PictureLocalDataSource getLocalDataSource() {
         return mLocalDataSource;
     }

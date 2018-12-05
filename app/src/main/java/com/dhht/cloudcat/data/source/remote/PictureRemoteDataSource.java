@@ -1,5 +1,6 @@
 package com.dhht.cloudcat.data.source.remote;
 
+import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.util.MRetrofite;
@@ -15,6 +16,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import util.SharedPreferencesUtil;
 
 public class PictureRemoteDataSource implements PictureDataSource {
 
@@ -74,14 +76,15 @@ public class PictureRemoteDataSource implements PictureDataSource {
         File file = new File(picture.getLocalPath());
         RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("myFile", file.getName(), body);
-
-        retrofiteApi.uploadFile(picture.getId(), picture.getLocalPath(), "Tyhj", "picture", part).enqueue(new Callback<Result<MyFile>>() {
+        String userId = SharedPreferencesUtil.getString(Const.Txt.userName, null);
+        retrofiteApi.uploadFile(picture.getId(), picture.getLocalPath(), userId, "picture", part).enqueue(new Callback<Result<MyFile>>() {
             @Override
             public void onResponse(Call<Result<MyFile>> call, Response<Result<MyFile>> response) {
                 Result<MyFile> myFileResult = response.body();
                 MyFile myFile1 = myFileResult.getData();
-                if (myFile1 == null)
+                if (myFile1 == null) {
                     return;
+                }
                 picture.setRemotePath(myFile1.getFileUrl());
                 picture.setRemoteMiniPath(myFile1.getFileMiniUrl());
                 if (savePicCallBack != null) {
@@ -98,6 +101,11 @@ public class PictureRemoteDataSource implements PictureDataSource {
 
     @Override
     public void uploadPic(Picture picture) {
+
+    }
+
+    @Override
+    public void deleteAllPic(String userId) {
 
     }
 

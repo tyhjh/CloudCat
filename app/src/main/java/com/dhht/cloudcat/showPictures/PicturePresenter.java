@@ -93,6 +93,11 @@ public class PicturePresenter implements PicturesContract.Presenter {
     }
 
     @Override
+    public void clearDatabase() {
+        mPictureRepository.deleteAllPic(null);
+    }
+
+    @Override
     public PicturesActivity getView() {
         return mPicturesActivity;
     }

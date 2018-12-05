@@ -18,7 +18,7 @@ public interface PictureDataSource {
     }
 
     //获取所有图片
-    void getPics(String userId,GetPicsCallback getPicsCallback);
+    void getPics(String userId, GetPicsCallback getPicsCallback);
 
     //删除一张图片
     void deletePic(Long picId);
@@ -28,5 +28,11 @@ public interface PictureDataSource {
 
     //更新图片
     void uploadPic(Picture picture);
+
+    /**
+     * 删除所有图片
+     * @param userId
+     */
+    void deleteAllPic(String userId);
 
 }

@@ -35,10 +35,15 @@ public interface PicturesContract {
         void deletePic(Picture picture);
 
         //添加本地图片
-        void addPic(File file,List<Picture> pictureList);
+        void addPic(File file, List<Picture> pictureList);
 
         //上传图片
         void uploadAllPic(List<Picture> pictureList);
+
+        /**
+         * 清空数据库
+         */
+        void clearDatabase();
 
     }
 }

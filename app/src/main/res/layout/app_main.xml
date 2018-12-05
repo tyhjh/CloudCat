@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:text="CloudCat"
                     android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                    android:textColor="@color/white"
+                    android:textColor="@color/status_dark"
                     android:textSize="18sp" />
 
                 <View
@@ -40,8 +40,8 @@
 
                 <ImageView
                     android:id="@+id/iv_avatar"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:scaleType="centerInside" />

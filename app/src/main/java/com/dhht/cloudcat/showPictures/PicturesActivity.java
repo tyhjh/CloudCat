@@ -1,22 +1,25 @@
 package com.dhht.cloudcat.showPictures;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -53,49 +56,84 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     PicturePresenter mPresenter;
     private static int spanCount = 4;
     private static int spanCountMax = 10;
+    ObjectAnimator objectAnimator;
 
     DrawerLayout drawer;
-    NavigationView nv_view;
+    NavigationView nvView;
+    String userName;
 
-    ImageView iv_avatar, iv_bigAvatar;
-    TextView tv_userName, tv_signature;
+    ImageView ivAvatar, ivBigAvatar;
+    TextView tvSignature;
+    EditText tvUserName;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mPresenter = new PicturePresenter(this);
-        mPresenter.getAllPic("Tyhj");
-        initRcycleView();
+        userName = SharedPreferencesUtil.getString(Const.Txt.userName, getResources().getString(R.string.userName));
         initView();
+        initRcycleView();
+        mPresenter = new PicturePresenter(this);
+        mPresenter.getAllPic(userName);
     }
 
     private void initView() {
         FrameLayout fl_main = findViewById(R.id.fl_main);
-        nv_view = findViewById(R.id.nv_view);
-        UiUtil.disableNavigationViewScrollbars(nv_view);
+        nvView = findViewById(R.id.nv_view);
+        UiUtil.disableNavigationViewScrollbars(nvView);
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, null, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull View view, float v) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull View view) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View view) {
+                String newName=tvUserName.getText().toString().trim();
+                if (!userName.equals(newName)) {
+                    SharedPreferencesUtil.save(Const.Txt.userName, newName);
+                    mPresenter.clearDatabase();
+                    startActivity(new Intent(PicturesActivity.this, PicturesActivity.class));
+                    finish();
+                }
+            }
+
+            @Override
+            public void onDrawerStateChanged(int i) {
+
+            }
+        });
         toggle.syncState();
         UltimateBar.Companion.with(this)
-                .statusDrawable(getResources().getDrawable(R.drawable.colorPrimary))           // 状态栏背景，默认 null
+                .statusDark(true)
+                .statusDrawable(getResources().getDrawable(R.drawable.colorPrimary))
                 .create()
-                .drawableBarDrawer(drawer, fl_main, nv_view);
+                .drawableBarDrawer(drawer, fl_main, nvView);
 
-
-        iv_bigAvatar=nv_view.getHeaderView(0).findViewById(R.id.iv_bigAvatar);
+        tvUserName = nvView.getHeaderView(0).findViewById(R.id.tv_userName);
+        tvSignature = nvView.getHeaderView(0).findViewById(R.id.tv_signature);
+        ivBigAvatar = nvView.getHeaderView(0).findViewById(R.id.iv_bigAvatar);
 
         Glide.with(PicturesActivity.this)
                 .load(R.drawable.ic_avatar_defult).
                 apply(RequestOptions.circleCropTransform())
-                .into(iv_bigAvatar);
+                .into(ivBigAvatar);
 
-
-
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.head_bg);
+        int txtColor = UiUtil.getColor(bitmap, 5).getRgb();
+        tvSignature.setTextColor(txtColor);
+        tvUserName.setTextColor(txtColor);
+        tvUserName.setText(userName);
         findViewById(R.id.fab_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -103,24 +141,29 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 showChooseWayView();
             }
         });
-        iv_avatar = findViewById(R.id.iv_avatar);
+        ivAvatar = findViewById(R.id.iv_avatar);
         Glide.with(PicturesActivity.this)
-                .load(R.drawable.ic_avatar_defult).
+                .load(R.drawable.ic_oder_span).
                 apply(RequestOptions.circleCropTransform())
                 .apply(GlileUtil.getListPicOption())
-                .into(iv_avatar);
+                .into(ivAvatar);
 
-        iv_avatar.setOnClickListener(new View.OnClickListener() {
+        objectAnimator = ObjectAnimator.ofFloat(ivAvatar, "rotation", 0f, 90f);
+        objectAnimator.setDuration(400);
+        objectAnimator.setInterpolator(new OvershootInterpolator());
+
+        ivAvatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               /* if (spanCount >= spanCountMax) {
+                objectAnimator.start();
+                VibrateUtil.vibrate(Const.Time.animVibrateTime);
+                if (spanCount >= spanCountMax) {
                     spanCount = 1;
                 } else {
                     spanCount++;
                 }
-                SharedPreferencesUtil.save(getResources().getString(R.string.spanCount), spanCount);
-                rvPictures.setLayoutManager(new GridLayoutManager(PicturesActivity.this, spanCount));*/
-                drawer.openDrawer(GravityCompat.START);
+                SharedPreferencesUtil.save(Const.Txt.spanCountTxt, spanCount);
+                rvPictures.setLayoutManager(new GridLayoutManager(PicturesActivity.this, spanCount));
             }
         });
 
@@ -164,7 +207,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
      * 初始化recyclerView
      */
     private void initRcycleView() {
-        spanCount = SharedPreferencesUtil.getInt(getResources().getString(R.string.spanCount), 4);
+        spanCount = SharedPreferencesUtil.getInt(Const.Txt.spanCountTxt, Const.Number.defultSpanCount);
         rvPictures = findViewById(R.id.rv_pictures);
         mPictureAdapter = new CommonAdapter<Picture>(this, new ArrayList<Picture>(0), R.layout.item_picture) {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -211,19 +254,31 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         rvPictures.setAdapter(mPictureAdapter);
     }
 
-    //展示，刷新图片
+    /**
+     * 展示，刷新图片
+     *
+     * @param pictureList
+     */
     @Override
     public void showPic(List<Picture> pictureList) {
         mPictureAdapter.replaceData(pictureList);
     }
 
-    //删除图片
+    /**
+     * 删除图片
+     *
+     * @param position
+     */
     @Override
     public void deletePic(int position) {
         mPictureAdapter.removeData(position);
     }
 
-    //添加图片
+    /**
+     * 添加图片
+     *
+     * @param picture
+     */
     @Override
     public void addPic(Picture picture) {
         mPictureAdapter.insertData(0, picture);
@@ -231,7 +286,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
 
     @Override
     public void addPicFail(String msg) {
-        SnackbarUtil.ShortSnackbar(iv_avatar, msg,
+        SnackbarUtil.ShortSnackbar(ivAvatar, msg,
                 getResources().getColor(R.color.white),
                 getResources().getColor(R.color.colorPrimary)).show();
     }
@@ -239,12 +294,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
 
     @Override
     public void uploadPicFinish() {
-        SnackbarUtil.ShortSnackbar(iv_avatar,
+        SnackbarUtil.ShortSnackbar(ivAvatar,
                 getResources().getString(R.string.uploadPicOk),
                 getResources().getColor(R.color.white),
                 getResources().getColor(R.color.colorPrimary)).show();
     }
-
 
     @Override
     public PicturePresenter getPresenter() {
