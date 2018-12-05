@@ -20,14 +20,14 @@ import snackBar.SnackbarUtil;
 public class ImgFragment extends Fragment implements ImgContract.View {
     PinchImageView iv_action_img;
     Picture picture;
-    ImgPresenter imgPresenter;
+    ImgPresenter mImgPresenter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_big_pic, null, false);
         iv_action_img = view.findViewById(R.id.iv_action_img);
-        imgPresenter = new ImgPresenter(this);
+        mImgPresenter = new ImgPresenter(this);
         return view;
     }
 
@@ -67,7 +67,7 @@ public class ImgFragment extends Fragment implements ImgContract.View {
             public boolean onLongClick(View view) {
                 if (picture.getFile() == null) {
                     SnackbarUtil.snkbarWait(iv_action_img, "图片下载中");
-                    imgPresenter.downLoadFile(picture);
+                    getPresenter().downLoadFile(picture);
                 } else {
                     SnackbarUtil.ShortSnackbar(iv_action_img,
                             "图片地址为：" + picture.getLocalPath(),
@@ -101,4 +101,8 @@ public class ImgFragment extends Fragment implements ImgContract.View {
     }
 
 
+    @Override
+    public ImgPresenter getPresenter() {
+        return mImgPresenter;
+    }
 }

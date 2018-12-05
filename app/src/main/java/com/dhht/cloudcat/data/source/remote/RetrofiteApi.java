@@ -14,6 +14,7 @@ import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 public interface RetrofiteApi {
@@ -52,7 +53,7 @@ public interface RetrofiteApi {
     @DELETE("file")
     Call<Result<String>> deleteFile(@Query("myFileId") Long myFileId);
 
-
+    @Streaming
     @GET
     Call<ResponseBody> downloadFileWithDynamicUrlSync(@Url String fileUrl);
 

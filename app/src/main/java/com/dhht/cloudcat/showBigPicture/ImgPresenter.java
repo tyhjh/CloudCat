@@ -20,7 +20,7 @@ public class ImgPresenter implements ImgContract.Presenter {
         mView = view;
         appExecutors = new AppExecutors();
         downLoadDataSource = DownLoadDataSource.getInstance(appExecutors);
-        mPictureLocalDataSource=PictureLocalDataSource.getInstance(appExecutors,AppDataBase.getInstance(mView.getContext()).pictureDao());
+        mPictureLocalDataSource = PictureLocalDataSource.getInstance(appExecutors, AppDataBase.getInstance(mView.getContext()).pictureDao());
     }
 
     @Override
@@ -29,12 +29,16 @@ public class ImgPresenter implements ImgContract.Presenter {
         downLoadDataSource.downLoad(picture.getRemotePath(), savePath, new DownLoadDataSource.DownloadCallback() {
             @Override
             public void downLoadFail() {
-                mView.downLoadFail();
+                if (mView.isResumed()) {
+                    mView.downLoadFail();
+                }
             }
 
             @Override
             public void downLoadFinish(File file) {
-                mView.downLoadFinish(file.getPath());
+                if (mView.isResumed()) {
+                    mView.downLoadFinish(file.getPath());
+                }
                 picture.setLocalPath(file.getPath());
                 updatePicture(picture);
             }
@@ -47,4 +51,8 @@ public class ImgPresenter implements ImgContract.Presenter {
     }
 
 
+    @Override
+    public ImgFragment getView() {
+        return mView;
+    }
 }

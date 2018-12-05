@@ -39,7 +39,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
 
     RecyclerView rvPictures;
     CommonAdapter<Picture> mPictureAdapter;
-    PicturesContract.Presenter mPresenter;
+    PicturePresenter mPresenter;
     private static int spanCount = 3;
     private static int spanCountMax = 10;
     private static int BIG_PICTURE_ACTIVITY_RESULT = 5;
@@ -200,5 +200,10 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 getResources().getColor(R.color.colorPrimary)).show();
     }
 
+
+    @Override
+    public PicturePresenter getPresenter() {
+        return mPresenter;
+    }
 
 }

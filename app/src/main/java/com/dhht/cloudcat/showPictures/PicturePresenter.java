@@ -2,7 +2,6 @@ package com.dhht.cloudcat.showPictures;
 
 import android.content.Context;
 import android.text.TextUtils;
-
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.data.source.PictureRepository;
@@ -30,7 +29,7 @@ public class PicturePresenter implements PicturesContract.Presenter {
         mPictureRepository.getLocalDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
             @Override
             public void onPicGet(final List<Picture> localPictureList) {
-                mPicturesActivity.showPic(localPictureList);
+                getView().showPic(localPictureList);
                 uploadAllPic(localPictureList);
                 mPictureRepository.getRemoteDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
                     @Override
@@ -41,7 +40,9 @@ public class PicturePresenter implements PicturesContract.Presenter {
                                 mPictureRepository.getLocalDataSource().savePic(picture, null);
                             }
                         }
-                        mPicturesActivity.showPic(localPictureList);
+                        if (getView() != null) {
+                            getView().showPic(localPictureList);
+                        }
                     }
                 });
             }
@@ -57,15 +58,17 @@ public class PicturePresenter implements PicturesContract.Presenter {
     public void addPic(File file, List<Picture> pictureList) {
         final Picture picture = new Picture(file);
         if (pictureList.contains(picture)) {
-            mPicturesActivity.addPicFail("图片已存在");
+            getView().addPicFail("图片已存在");
             return;
         }
-        mPicturesActivity.addPic(picture);
+        getView().addPic(picture);
         mPictureRepository.savePic(picture, new PictureDataSource.SavePicCallBack() {
             @Override
             public void onSavePic(Picture newPicture) {
                 mPictureRepository.uploadPic(newPicture);
-                mPicturesActivity.uploadPicFinish();
+                if (getView() != null) {
+                    getView().uploadPicFinish();
+                }
                 ClipbordUtil.copyTxt(newPicture.getRemotePath());
             }
         });
@@ -87,4 +90,8 @@ public class PicturePresenter implements PicturesContract.Presenter {
         }
     }
 
+    @Override
+    public PicturesActivity getView() {
+        return mPicturesActivity;
+    }
 }
