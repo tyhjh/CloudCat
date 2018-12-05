@@ -13,6 +13,9 @@ import com.bumptech.glide.Glide;
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
+import com.dhht.cloudcat.util.AppUtil;
+
+import java.io.File;
 
 import snackBar.SnackbarUtil;
 import util.ClipbordUtil;
@@ -94,6 +97,7 @@ public class ImgFragment extends Fragment implements ImgContract.View {
                 "下载完成，图片地址为：" + path,
                 getResources().getColor(R.color.white),
                 getResources().getColor(R.color.colorPrimary)).show();
+        AppUtil.sendBroadcastToRefresh(new File(path),getActivity());
     }
 
     @Override
