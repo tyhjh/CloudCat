@@ -6,7 +6,6 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import com.dhht.cloudcat.data.Picture;
-import com.dhht.cloudcat.data.source.local.PictureDao;
 
 
 @Database(entities = {Picture.class}, version = 1)

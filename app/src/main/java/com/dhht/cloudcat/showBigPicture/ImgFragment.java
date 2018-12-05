@@ -11,10 +11,13 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.dhht.cloudcat.R;
+import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
-import com.dhht.cloudcat.util.ClipbordUtil;
 
 import snackBar.SnackbarUtil;
+import util.ClipbordUtil;
+import util.VibrateUtil;
+
 
 
 public class ImgFragment extends Fragment implements ImgContract.View {
@@ -65,6 +68,7 @@ public class ImgFragment extends Fragment implements ImgContract.View {
         iv_action_img.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
+                VibrateUtil.vibrate(Const.Time.longClickVibrateTime);
                 if (picture.getFile() == null) {
                     SnackbarUtil.snkbarWait(iv_action_img, "图片下载中");
                     getPresenter().downLoadFile(picture);

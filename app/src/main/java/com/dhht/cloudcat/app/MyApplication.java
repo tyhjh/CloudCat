@@ -3,14 +3,13 @@ package com.dhht.cloudcat.app;
 import android.app.Application;
 import android.os.Environment;
 
-import com.dhht.cloudcat.util.ClipbordUtil;
-import com.dhht.cloudcat.util.InternetUtil;
-import com.dhht.cloudcat.util.SharedPreferenceUtil;
+
 import com.yorhp.picturepick.PicturePickUtil;
 
 import java.io.File;
 
 import log.LogUtils;
+import manager.UtilManager;
 import toast.ToastUtil;
 
 public class MyApplication extends Application {
@@ -23,11 +22,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         PicturePickUtil.init("com.dhht.cloudcat");
-        ToastUtil.init(this);
-        LogUtils.init(IS_DEBUG, null);
-        InternetUtil.init(this);
-        SharedPreferenceUtil.init(this);
-        ClipbordUtil.init(this);
+        UtilManager.initAll(this);
         appDir = Environment.getExternalStorageDirectory() + "/" + APP_NAME;
     }
 

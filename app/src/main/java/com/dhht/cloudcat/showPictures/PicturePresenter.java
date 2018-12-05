@@ -2,15 +2,17 @@ package com.dhht.cloudcat.showPictures;
 
 import android.content.Context;
 import android.text.TextUtils;
+
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.data.source.PictureRepository;
 import com.dhht.cloudcat.util.AppExecutors;
-import com.dhht.cloudcat.util.ClipbordUtil;
-import com.dhht.cloudcat.util.InternetUtil;
 
 import java.io.File;
 import java.util.List;
+
+import util.ClipbordUtil;
+import util.InternetUtil;
 
 public class PicturePresenter implements PicturesContract.Presenter {
 

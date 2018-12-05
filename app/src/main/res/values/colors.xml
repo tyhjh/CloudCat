@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#bdb76b</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimaryDark">#bdb76b</color>
     <color name="colorAccent">#D81B60</color>
 
 
     <color name="ichome">#a1a1a1</color>
 
+    <color name="transparent">#00000000</color>
 
     <color name="white_half">#f4f4f4</color>
     <color name="mblue">#2ca6cb</color>
