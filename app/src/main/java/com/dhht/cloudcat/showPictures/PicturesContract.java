@@ -29,13 +29,13 @@ public interface PicturesContract {
     interface Presenter extends BasePresenter {
 
         //获取所有图片
-        void getAllPic(String userId);
+        void getAllPic(String userId, String tag);
 
         //删除本地图片
         void deletePic(Picture picture);
 
         //添加本地图片
-        void addPic(File file, List<Picture> pictureList);
+        void addPic(File file, List<Picture> pictureList, String tag);
 
         //上传图片
         void uploadAllPic(List<Picture> pictureList);

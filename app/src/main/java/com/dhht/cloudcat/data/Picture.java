@@ -31,6 +31,8 @@ public class Picture {
     @Nullable
     private String remotePath;//远程地址
 
+    private String tag;
+
     //文件缩略图
     private String remoteMiniPath;
 
@@ -40,6 +42,7 @@ public class Picture {
         remotePath = myFile.getFileUrl();
         remoteMiniPath = myFile.getFileMiniUrl();
         name = myFile.getFileName();
+        tag=myFile.getFileTag();
     }
 
     public Picture() {
@@ -132,6 +135,14 @@ public class Picture {
         return false;
     }
 
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     public String getRemoteMiniPath() {
         return remoteMiniPath;

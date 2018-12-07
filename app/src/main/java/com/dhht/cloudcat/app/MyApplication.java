@@ -3,14 +3,11 @@ package com.dhht.cloudcat.app;
 import android.app.Application;
 import android.os.Environment;
 
-
 import com.yorhp.picturepick.PicturePickUtil;
 
 import java.io.File;
 
-import log.LogUtils;
 import manager.UtilManager;
-import toast.ToastUtil;
 
 public class MyApplication extends Application {
 

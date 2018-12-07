@@ -35,8 +35,8 @@ public class PictureRemoteDataSource implements PictureDataSource {
     }
 
     @Override
-    public void getPics(String userId, final GetPicsCallback getPicsCallback) {
-        retrofiteApi.getFiles(userId).enqueue(new Callback<Result<List<MyFile>>>() {
+    public void getPics(String userId, String tag, final GetPicsCallback getPicsCallback) {
+        retrofiteApi.getFiles(userId, tag).enqueue(new Callback<Result<List<MyFile>>>() {
             @Override
             public void onResponse(Call<Result<List<MyFile>>> call, Response<Result<List<MyFile>>> response) {
                 List<Picture> pictureList = new ArrayList<>();
@@ -77,7 +77,7 @@ public class PictureRemoteDataSource implements PictureDataSource {
         RequestBody body = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData("myFile", file.getName(), body);
         String userId = SharedPreferencesUtil.getString(Const.Txt.userName, null);
-        retrofiteApi.uploadFile(picture.getId(), picture.getLocalPath(), userId, "picture", part).enqueue(new Callback<Result<MyFile>>() {
+        retrofiteApi.uploadFile(picture.getId(), picture.getLocalPath(), userId, picture.getTag(), part).enqueue(new Callback<Result<MyFile>>() {
             @Override
             public void onResponse(Call<Result<MyFile>> call, Response<Result<MyFile>> response) {
                 Result<MyFile> myFileResult = response.body();

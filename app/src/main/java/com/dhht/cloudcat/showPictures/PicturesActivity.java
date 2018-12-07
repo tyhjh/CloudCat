@@ -22,6 +22,7 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,6 +45,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import log.LogUtils;
 import snackBar.SnackbarUtil;
 import util.ScreenUtil;
 import util.SharedPreferencesUtil;
@@ -63,8 +65,13 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     String userName;
 
     ImageView ivAvatar, ivBigAvatar;
-    TextView tvSignature;
+    TextView tvSignature, tvTag;
     EditText tvUserName;
+
+    String mCurrentPicureTag;
+
+    LinearLayout ll_handpick, ll_wallpaper, ll_illustration, ll_face, ll_screenshot, ll_gif, ll_all, ll_trash;
+    LinearLayout llTags;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -75,10 +82,11 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         initView();
         initRcycleView();
         mPresenter = new PicturePresenter(this);
-        mPresenter.getAllPic(userName);
+        switchTag(0);
     }
 
     private void initView() {
+        tvTag = findViewById(R.id.tv_tag);
         FrameLayout fl_main = findViewById(R.id.fl_main);
         nvView = findViewById(R.id.nv_view);
         UiUtil.disableNavigationViewScrollbars(nvView);
@@ -99,7 +107,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
 
             @Override
             public void onDrawerClosed(@NonNull View view) {
-                String newName=tvUserName.getText().toString().trim();
+                String newName = tvUserName.getText().toString().trim();
                 if (!userName.equals(newName)) {
                     SharedPreferencesUtil.save(Const.Txt.userName, newName);
                     mPresenter.clearDatabase();
@@ -119,6 +127,18 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 .statusDrawable(getResources().getDrawable(R.drawable.colorPrimary))
                 .create()
                 .drawableBarDrawer(drawer, fl_main, nvView);
+        llTags = nvView.getHeaderView(0).findViewById(R.id.ll_tags);
+        for (int i = 0; i < llTags.getChildCount(); i++) {
+            final int finalI = i;
+            llTags.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    switchTag(finalI);
+                }
+            });
+
+        }
+
 
         tvUserName = nvView.getHeaderView(0).findViewById(R.id.tv_userName);
         tvSignature = nvView.getHeaderView(0).findViewById(R.id.tv_signature);
@@ -169,6 +189,20 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
 
     }
 
+    /**
+     * 切换
+     * @param position
+     */
+    private void switchTag(int position) {
+        String tag = ((TextView) (((LinearLayout) (llTags.getChildAt(position))).getChildAt(1))).getText().toString().trim();
+        if (!tag.equals(mCurrentPicureTag)) {
+            mCurrentPicureTag = tag;
+            tvTag.setText(mCurrentPicureTag);
+            mPresenter.getAllPic(userName, mCurrentPicureTag);
+        }
+        drawer.closeDrawer(GravityCompat.START);
+    }
+
 
     private void showChooseWayView() {
         View bottomsheetView = LayoutInflater.from(PicturesActivity.this).inflate(R.layout.bottomsheet_chooseway, null);
@@ -183,7 +217,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 PicturePickUtil.pickByCamera(PicturesActivity.this, new OnPickListener() {
                     @Override
                     public void pickPicture(File file) {
-                        mPresenter.addPic(file, mPictureAdapter.getDatas());
+                        mPresenter.addPic(file, mPictureAdapter.getDatas(), mCurrentPicureTag);
                     }
                 });
             }
@@ -195,7 +229,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 PicturePickUtil.pickByAlbum(PicturesActivity.this, new OnPickListener() {
                     @Override
                     public void pickPicture(File file) {
-                        mPresenter.addPic(file, mPictureAdapter.getDatas());
+                        mPresenter.addPic(file, mPictureAdapter.getDatas(), mCurrentPicureTag);
                     }
                 });
             }
