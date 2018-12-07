@@ -32,11 +32,11 @@ public class PictureLocalDataSource implements PictureDataSource {
 
 
     @Override
-    public void getPics(String userId, final GetPicsCallback getPicsCallback) {
+    public void getPics(String userId, final String tag, final GetPicsCallback getPicsCallback) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                final List<Picture> pictureList = mPictureDao.getPics();
+                final List<Picture> pictureList = mPictureDao.getPics(tag);
                 mAppExecutors.mainThread().execute(new Runnable() {
                     @Override
                     public void run() {

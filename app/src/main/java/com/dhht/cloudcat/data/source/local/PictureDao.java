@@ -18,8 +18,8 @@ public interface PictureDao {
      *
      * @return
      */
-    @Query("SELECT * FROM Pictures ORDER BY pictureid DESC")
-    List<Picture> getPics();
+    @Query("SELECT * FROM Pictures WHERE tag=:tag ORDER BY pictureid DESC")
+    List<Picture> getPics(String tag);
 
     /**
      * 根据id获取图片

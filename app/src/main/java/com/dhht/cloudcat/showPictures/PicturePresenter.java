@@ -27,13 +27,13 @@ public class PicturePresenter implements PicturesContract.Presenter {
     }
 
     @Override
-    public void getAllPic(final String userId) {
-        mPictureRepository.getLocalDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
+    public void getAllPic(final String userId, final String tag) {
+        mPictureRepository.getLocalDataSource().getPics(userId, tag, new PictureDataSource.GetPicsCallback() {
             @Override
             public void onPicGet(final List<Picture> localPictureList) {
                 getView().showPic(localPictureList);
                 uploadAllPic(localPictureList);
-                mPictureRepository.getRemoteDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
+                mPictureRepository.getRemoteDataSource().getPics(userId, tag, new PictureDataSource.GetPicsCallback() {
                     @Override
                     public void onPicGet(List<Picture> remotePictureList) {
                         for (Picture picture : remotePictureList) {
@@ -57,8 +57,9 @@ public class PicturePresenter implements PicturesContract.Presenter {
     }
 
     @Override
-    public void addPic(File file, List<Picture> pictureList) {
+    public void addPic(File file, List<Picture> pictureList, String tag) {
         final Picture picture = new Picture(file);
+        picture.setTag(tag);
         if (pictureList.contains(picture)) {
             getView().addPicFail("图片已存在");
             return;

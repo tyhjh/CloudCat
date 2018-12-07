@@ -41,8 +41,8 @@ public interface RetrofiteApi {
      * @param userId
      * @return
      */
-    @GET("files")
-    Call<Result<List<MyFile>>> getFiles(@Query("userId") String userId);
+    @GET("tag/files")
+    Call<Result<List<MyFile>>> getFiles(@Query("userId") String userId,@Query("fileTag") String fileTag);
 
     /**
      * 删除文件

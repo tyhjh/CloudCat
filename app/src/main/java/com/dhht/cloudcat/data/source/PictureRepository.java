@@ -20,7 +20,7 @@ public class PictureRepository implements PictureDataSource {
     }
 
     @Override
-    public void getPics(String userId,GetPicsCallback getPicsCallback) {
+    public void getPics(String userId,String tag,GetPicsCallback getPicsCallback) {
 
     }
 
