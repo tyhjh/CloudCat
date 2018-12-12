@@ -35,8 +35,29 @@ public class PictureRemoteDataSource implements PictureDataSource {
     }
 
     @Override
-    public void getPics(String userId, String tag, final GetPicsCallback getPicsCallback) {
-        retrofiteApi.getFiles(userId, tag).enqueue(new Callback<Result<List<MyFile>>>() {
+    public void getPics(String userId, final GetPicsCallback getPicsCallback) {
+        retrofiteApi.getFiles(userId).enqueue(new Callback<Result<List<MyFile>>>() {
+            @Override
+            public void onResponse(Call<Result<List<MyFile>>> call, Response<Result<List<MyFile>>> response) {
+                List<Picture> pictureList = new ArrayList<>();
+                List<MyFile> myFiles = response.body().getData();
+                for (MyFile myFile : myFiles) {
+                    Picture picture = new Picture(myFile);
+                    pictureList.add(picture);
+                }
+                getPicsCallback.onPicGet(pictureList);
+            }
+
+            @Override
+            public void onFailure(Call<Result<List<MyFile>>> call, Throwable t) {
+                LogUtils.e(t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void getPicsByTag(String userId, String tag, final GetPicsCallback getPicsCallback) {
+        retrofiteApi.getFilesByTag(userId, tag).enqueue(new Callback<Result<List<MyFile>>>() {
             @Override
             public void onResponse(Call<Result<List<MyFile>>> call, Response<Result<List<MyFile>>> response) {
                 List<Picture> pictureList = new ArrayList<>();

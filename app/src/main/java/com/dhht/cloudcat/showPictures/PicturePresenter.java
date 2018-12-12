@@ -3,6 +3,7 @@ package com.dhht.cloudcat.showPictures;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.data.source.PictureRepository;
@@ -27,13 +28,13 @@ public class PicturePresenter implements PicturesContract.Presenter {
     }
 
     @Override
-    public void getAllPic(final String userId, final String tag) {
-        mPictureRepository.getLocalDataSource().getPics(userId, tag, new PictureDataSource.GetPicsCallback() {
+    public void getAllPic(final String userId) {
+        mPictureRepository.getLocalDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
             @Override
             public void onPicGet(final List<Picture> localPictureList) {
                 getView().showPic(localPictureList);
                 uploadAllPic(localPictureList);
-                mPictureRepository.getRemoteDataSource().getPics(userId, tag, new PictureDataSource.GetPicsCallback() {
+                mPictureRepository.getRemoteDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
                     @Override
                     public void onPicGet(List<Picture> remotePictureList) {
                         for (Picture picture : remotePictureList) {
@@ -50,6 +51,38 @@ public class PicturePresenter implements PicturesContract.Presenter {
             }
         });
     }
+
+
+    @Override
+    public void getPicsByTag(final String userId, final String tag) {
+        if (Const.Txt.allPic.equals(tag)) {
+            getAllPic(userId);
+            return;
+        }
+
+        mPictureRepository.getLocalDataSource().getPicsByTag(userId, tag, new PictureDataSource.GetPicsCallback() {
+            @Override
+            public void onPicGet(final List<Picture> localPictureList) {
+                getView().showPic(localPictureList);
+                uploadAllPic(localPictureList);
+                mPictureRepository.getRemoteDataSource().getPicsByTag(userId, tag, new PictureDataSource.GetPicsCallback() {
+                    @Override
+                    public void onPicGet(List<Picture> remotePictureList) {
+                        for (Picture picture : remotePictureList) {
+                            if (!localPictureList.contains(picture)) {
+                                localPictureList.add(0, picture);
+                                mPictureRepository.getLocalDataSource().savePic(picture, null);
+                            }
+                        }
+                        if (getView() != null) {
+                            getView().showPic(localPictureList);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
 
     @Override
     public void deletePic(Picture picture) {

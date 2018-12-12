@@ -18,7 +18,10 @@ public interface PictureDataSource {
     }
 
     //获取所有图片
-    void getPics(String userId, String tag,GetPicsCallback getPicsCallback);
+    void getPics(String userId,GetPicsCallback getPicsCallback);
+
+    //获取所有图片
+    void getPicsByTag(String userId, String tag,GetPicsCallback getPicsCallback);
 
     //删除一张图片
     void deletePic(Long picId);

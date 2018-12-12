@@ -5,10 +5,7 @@ import java.util.List;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.DELETE;
-import retrofit2.http.Field;
-import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -42,7 +39,16 @@ public interface RetrofiteApi {
      * @return
      */
     @GET("tag/files")
-    Call<Result<List<MyFile>>> getFiles(@Query("userId") String userId,@Query("fileTag") String fileTag);
+    Call<Result<List<MyFile>>> getFilesByTag(@Query("userId") String userId,@Query("fileTag") String fileTag);
+
+    /**
+     * 获取文件
+     *
+     * @param userId
+     * @return
+     */
+    @GET("files")
+    Call<Result<List<MyFile>>> getFiles(@Query("userId") String userId);
 
     /**
      * 删除文件

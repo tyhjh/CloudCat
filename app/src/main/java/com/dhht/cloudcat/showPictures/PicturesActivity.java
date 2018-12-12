@@ -45,7 +45,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import log.LogUtils;
 import snackBar.SnackbarUtil;
 import util.ScreenUtil;
 import util.SharedPreferencesUtil;
@@ -69,8 +68,6 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     EditText tvUserName;
 
     String mCurrentPicureTag;
-
-    LinearLayout ll_handpick, ll_wallpaper, ll_illustration, ll_face, ll_screenshot, ll_gif, ll_all, ll_trash;
     LinearLayout llTags;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -82,7 +79,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         initView();
         initRcycleView();
         mPresenter = new PicturePresenter(this);
-        switchTag(0);
+        switchTag(1);
     }
 
     private void initView() {
@@ -191,6 +188,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
 
     /**
      * 切换
+     *
      * @param position
      */
     private void switchTag(int position) {
@@ -198,7 +196,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         if (!tag.equals(mCurrentPicureTag)) {
             mCurrentPicureTag = tag;
             tvTag.setText(mCurrentPicureTag);
-            mPresenter.getAllPic(userName, mCurrentPicureTag);
+            mPresenter.getPicsByTag(userName, mCurrentPicureTag);
         }
         drawer.closeDrawer(GravityCompat.START);
     }
@@ -279,7 +277,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                         VibrateUtil.vibrate(Const.Time.longClickVibrateTime);
                         mPresenter.deletePic(picture);
                         deletePic(commonViewHolder.getAdapterPosition());
-                        return false;
+                        return true;
                     }
                 });
             }

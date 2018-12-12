@@ -14,7 +14,8 @@ public interface Const {
 
     interface Txt {
         String spanCountTxt = "SPAN_COUNT";
-        String userName="USER_NAME";
+        String userName = "USER_NAME";
+        String allPic = "所有图片";
     }
 
     interface Number {

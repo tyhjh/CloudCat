@@ -20,7 +20,12 @@ public class PictureRepository implements PictureDataSource {
     }
 
     @Override
-    public void getPics(String userId,String tag,GetPicsCallback getPicsCallback) {
+    public void getPics(String userId, GetPicsCallback getPicsCallback) {
+
+    }
+
+    @Override
+    public void getPicsByTag(String userId, String tag, GetPicsCallback getPicsCallback) {
 
     }
 
@@ -34,7 +39,7 @@ public class PictureRepository implements PictureDataSource {
 
     @Override
     public void savePic(Picture picture, SavePicCallBack savePicCallBack) {
-        mLocalDataSource.savePic(picture,savePicCallBack);
+        mLocalDataSource.savePic(picture, savePicCallBack);
         mRemoteDataSource.savePic(picture, savePicCallBack);
     }
 

@@ -14,12 +14,21 @@ import java.util.List;
 public interface PictureDao {
 
     /**
-     * 获取所有图片
+     * 获取所有图片byTag
      *
      * @return
      */
     @Query("SELECT * FROM Pictures WHERE tag=:tag ORDER BY pictureid DESC")
-    List<Picture> getPics(String tag);
+    List<Picture> getPicsByTag(String tag);
+
+
+    /**
+     * 获取所有图片
+     *
+     * @return
+     */
+    @Query("SELECT * FROM Pictures ORDER BY pictureid DESC")
+    List<Picture> getPics();
 
     /**
      * 根据id获取图片

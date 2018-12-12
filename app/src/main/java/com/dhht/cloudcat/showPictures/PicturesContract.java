@@ -29,7 +29,11 @@ public interface PicturesContract {
     interface Presenter extends BasePresenter {
 
         //获取所有图片
-        void getAllPic(String userId, String tag);
+        void getAllPic(String userId);
+
+
+        //获取Tag图片
+        void getPicsByTag(String userId, String tag);
 
         //删除本地图片
         void deletePic(Picture picture);
