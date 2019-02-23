@@ -32,6 +32,7 @@ import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.showBigPicture.BigPicturesActivity;
+import com.dhht.cloudcat.uploadPicture.UploadPicService;
 import com.dhht.cloudcat.util.GlileUtil;
 import com.dhht.cloudcat.util.UiUtil;
 import com.example.bottomsheet.BottomFragment;
@@ -76,10 +77,12 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userName = SharedPreferencesUtil.getString(Const.Txt.userName, getResources().getString(R.string.userName));
+        SharedPreferencesUtil.save(Const.Txt.userName, userName);
         initView();
         initRcycleView();
         mPresenter = new PicturePresenter(this);
         switchTag(1);
+        startService(new Intent(PicturesActivity.this, UploadPicService.class));
     }
 
     private void initView() {
@@ -202,6 +205,9 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     }
 
 
+    /**
+     * 显示选择图片的方式
+     */
     private void showChooseWayView() {
         View bottomsheetView = LayoutInflater.from(PicturesActivity.this).inflate(R.layout.bottomsheet_chooseway, null);
         final BottomFragment fragment = new BottomFragment();

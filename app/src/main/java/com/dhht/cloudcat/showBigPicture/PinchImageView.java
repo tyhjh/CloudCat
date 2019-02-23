@@ -50,6 +50,11 @@ public class PinchImageView extends android.support.v7.widget.AppCompatImageView
      */
     private OnClickListener mOnClickListener;
 
+
+    public OnClickListener getOnClickListener() {
+        return mOnClickListener;
+    }
+
     /**
      * 外界长按事件
      *

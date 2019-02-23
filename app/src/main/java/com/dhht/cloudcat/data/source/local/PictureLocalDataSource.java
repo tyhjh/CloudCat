@@ -4,6 +4,7 @@ import com.dhht.cloudcat.data.Picture;
 import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.util.AppExecutors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PictureLocalDataSource implements PictureDataSource {
@@ -30,6 +31,25 @@ public class PictureLocalDataSource implements PictureDataSource {
         return INSTANCE;
     }
 
+
+    @Override
+    public void getPic(final Long picId, final GetPicsCallback callback) {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                final Picture picture = mPictureDao.getPicById(picId);
+                mAppExecutors.mainThread().execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        List<Picture> pictureList = new ArrayList<>();
+                        pictureList.add(picture);
+                        callback.onPicGet(pictureList);
+                    }
+                });
+            }
+        };
+        mAppExecutors.diskIO().execute(runnable);
+    }
 
     @Override
     public void getPics(String userId, final GetPicsCallback getPicsCallback) {
@@ -66,8 +86,6 @@ public class PictureLocalDataSource implements PictureDataSource {
     }
 
 
-
-
     @Override
     public void deletePic(final Long picId) {
         Runnable runnable = new Runnable() {
@@ -81,7 +99,7 @@ public class PictureLocalDataSource implements PictureDataSource {
 
 
     @Override
-    public void savePic(final Picture picture, final SavePicCallBack savePicCallBack) {
+    public void savePic(final Picture picture,String userId, final SavePicCallBack savePicCallBack) {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

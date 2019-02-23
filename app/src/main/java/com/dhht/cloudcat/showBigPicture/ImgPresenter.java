@@ -2,12 +2,14 @@ package com.dhht.cloudcat.showBigPicture;
 
 import com.dhht.cloudcat.app.MyApplication;
 import com.dhht.cloudcat.data.Picture;
+import com.dhht.cloudcat.data.source.PictureDataSource;
 import com.dhht.cloudcat.data.source.local.AppDataBase;
 import com.dhht.cloudcat.data.source.local.PictureLocalDataSource;
 import com.dhht.cloudcat.data.source.remote.download.DownLoadDataSource;
 import com.dhht.cloudcat.util.AppExecutors;
 
 import java.io.File;
+import java.util.List;
 
 public class ImgPresenter implements ImgContract.Presenter {
 
@@ -50,6 +52,17 @@ public class ImgPresenter implements ImgContract.Presenter {
         mPictureLocalDataSource.uploadPic(picture);
     }
 
+    @Override
+    public void getPicture(Picture picture) {
+        mPictureLocalDataSource.getPic(picture.getId(), new PictureDataSource.GetPicsCallback() {
+            @Override
+            public void onPicGet(List<Picture> pictureList) {
+                if (pictureList.size() > 0) {
+                    getView().setPictures(pictureList.get(0));
+                }
+            }
+        });
+    }
 
     @Override
     public ImgFragment getView() {

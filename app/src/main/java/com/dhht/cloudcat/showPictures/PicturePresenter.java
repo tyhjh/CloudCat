@@ -1,7 +1,6 @@
 package com.dhht.cloudcat.showPictures;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
@@ -12,8 +11,7 @@ import com.dhht.cloudcat.util.AppExecutors;
 import java.io.File;
 import java.util.List;
 
-import util.ClipbordUtil;
-import util.InternetUtil;
+import util.SharedPreferencesUtil;
 
 public class PicturePresenter implements PicturesContract.Presenter {
 
@@ -33,14 +31,13 @@ public class PicturePresenter implements PicturesContract.Presenter {
             @Override
             public void onPicGet(final List<Picture> localPictureList) {
                 getView().showPic(localPictureList);
-                uploadAllPic(localPictureList);
                 mPictureRepository.getRemoteDataSource().getPics(userId, new PictureDataSource.GetPicsCallback() {
                     @Override
                     public void onPicGet(List<Picture> remotePictureList) {
                         for (Picture picture : remotePictureList) {
                             if (!localPictureList.contains(picture)) {
                                 localPictureList.add(0, picture);
-                                mPictureRepository.getLocalDataSource().savePic(picture, null);
+                                mPictureRepository.getLocalDataSource().savePic(picture, userId, null);
                             }
                         }
                         if (getView() != null) {
@@ -64,14 +61,13 @@ public class PicturePresenter implements PicturesContract.Presenter {
             @Override
             public void onPicGet(final List<Picture> localPictureList) {
                 getView().showPic(localPictureList);
-                uploadAllPic(localPictureList);
                 mPictureRepository.getRemoteDataSource().getPicsByTag(userId, tag, new PictureDataSource.GetPicsCallback() {
                     @Override
                     public void onPicGet(List<Picture> remotePictureList) {
                         for (Picture picture : remotePictureList) {
                             if (!localPictureList.contains(picture)) {
                                 localPictureList.add(0, picture);
-                                mPictureRepository.getLocalDataSource().savePic(picture, null);
+                                mPictureRepository.getLocalDataSource().savePic(picture, userId, null);
                             }
                         }
                         if (getView() != null) {
@@ -97,34 +93,21 @@ public class PicturePresenter implements PicturesContract.Presenter {
             getView().addPicFail("图片已存在");
             return;
         }
+        String userId = SharedPreferencesUtil.getString(Const.Txt.userName, null);
         getView().addPic(picture);
-        mPictureRepository.savePic(picture, new PictureDataSource.SavePicCallBack() {
+        mPictureRepository.savePic(picture, userId, new PictureDataSource.SavePicCallBack() {
             @Override
             public void onSavePic(Picture newPicture) {
-                mPictureRepository.uploadPic(newPicture);
-                if (getView() != null) {
-                    getView().uploadPicFinish();
+                if(newPicture!=null){
+                    mPictureRepository.uploadPic(newPicture);
+                    if (getView() != null) {
+                        getView().uploadPicFinish();
+                    }
                 }
-                ClipbordUtil.copyTxt(newPicture.getRemotePath());
             }
         });
     }
 
-    @Override
-    public void uploadAllPic(List<Picture> pictureList) {
-        if (InternetUtil.isWifi()) {
-            for (Picture picture : pictureList) {
-                if (TextUtils.isEmpty(picture.getRemotePath())) {
-                    mPictureRepository.savePic(picture, new PictureDataSource.SavePicCallBack() {
-                        @Override
-                        public void onSavePic(Picture newPicture) {
-                            mPictureRepository.uploadPic(newPicture);
-                        }
-                    });
-                }
-            }
-        }
-    }
 
     @Override
     public void clearDatabase() {
