@@ -41,7 +41,7 @@ public class UploadPicService extends Service {
                         picPresenter.getmAppExecutors().networkIO().execute(new Runnable() {
                             @Override
                             public void run() {
-                                if (!InternetUtil.isWifi()) {
+                                if (InternetUtil.isWifi()) {
                                     for (Picture picture : pictureList) {
                                         if (TextUtils.isEmpty(picture.getRemotePath())) {
                                             picPresenter.uploadPic(picture, new PictureDataSource.SavePicCallBack() {
