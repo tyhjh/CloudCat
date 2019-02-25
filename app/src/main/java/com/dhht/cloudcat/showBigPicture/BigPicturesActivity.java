@@ -82,5 +82,4 @@ public class BigPicturesActivity extends AppCompatActivity {
         BigPicturesActivity.currenPosition = currenPosition;
     }
 
-
 }

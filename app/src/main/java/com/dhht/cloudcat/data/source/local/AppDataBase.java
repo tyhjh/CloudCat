@@ -8,7 +8,7 @@ import android.content.Context;
 import com.dhht.cloudcat.data.Picture;
 
 
-@Database(entities = {Picture.class}, version = 1)
+@Database(entities = {Picture.class}, version = 1,exportSchema = false)
 public abstract class AppDataBase extends RoomDatabase {
 
     private static AppDataBase INSTANCE;

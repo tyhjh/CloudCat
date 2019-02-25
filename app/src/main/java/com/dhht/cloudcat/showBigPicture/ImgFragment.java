@@ -22,7 +22,6 @@ import util.ClipbordUtil;
 import util.VibrateUtil;
 
 
-
 public class ImgFragment extends Fragment implements ImgContract.View {
     PinchImageView iv_action_img;
     Picture picture;
@@ -97,7 +96,8 @@ public class ImgFragment extends Fragment implements ImgContract.View {
                 "下载完成，图片地址为：" + path,
                 getResources().getColor(R.color.white),
                 getResources().getColor(R.color.colorPrimary)).show();
-        AppUtil.sendBroadcastToRefresh(new File(path),getActivity());
+        //更新图片到本地
+        AppUtil.sendBroadcastToRefresh(new File(path), getActivity());
     }
 
     @Override

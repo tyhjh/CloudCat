@@ -83,7 +83,6 @@ public class PicturePresenter implements PicturesContract.Presenter {
         });
     }
 
-
     @Override
     public void deletePic(Picture picture) {
         mPictureRepository.deletePic(picture.getId());

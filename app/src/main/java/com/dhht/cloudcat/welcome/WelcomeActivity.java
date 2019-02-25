@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.app.MyApplication;
+import com.dhht.cloudcat.app.User;
 import com.dhht.cloudcat.showPictures.PicturesActivity;
 
 import permison.PermissonUtil;
 import permison.listener.PermissionListener;
+import toast.ToastUtil;
 import util.ScreenUtil;
 
 public class WelcomeActivity extends AppCompatActivity {
