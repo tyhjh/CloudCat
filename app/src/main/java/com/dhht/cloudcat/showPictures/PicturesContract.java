@@ -12,26 +12,31 @@ public interface PicturesContract {
     interface View extends BaseView {
         /**
          * 显示图片、刷新列表
+         *
          * @param pictureList
          */
         void showPic(List<Picture> pictureList);
 
         /**
          * 删除本地图片成功
+         *
          * @param position
          */
         void deletePic(int position);
 
         /**
          * 添加本地图片
+         *
          * @param picture
          */
         void addPic(Picture picture);
 
         /**
          * 添加图片失败
+         *
          * @param msg
          */
+
         void addPicFail(String msg);
 
         /**
@@ -44,6 +49,7 @@ public interface PicturesContract {
 
         /**
          * 获取所有图片
+         *
          * @param userId
          */
         void getAllPic(String userId);
@@ -51,6 +57,7 @@ public interface PicturesContract {
 
         /**
          * 获取Tag图片
+         *
          * @param userId
          * @param tag
          */
@@ -58,23 +65,20 @@ public interface PicturesContract {
 
         /**
          * 删除本地图片
+         *
          * @param picture
          */
         void deletePic(Picture picture);
 
         /**
          * 添加本地图片
+         *
          * @param file
          * @param pictureList
          * @param tag
          */
         void addPic(File file, List<Picture> pictureList, String tag);
 
-        /**
-         * 上传图片
-         * @param pictureList
-         */
-        void uploadAllPic(List<Picture> pictureList);
 
         /**
          * 清空数据库

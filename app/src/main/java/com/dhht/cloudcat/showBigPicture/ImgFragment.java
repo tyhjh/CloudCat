@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide;
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.app.Const;
 import com.dhht.cloudcat.data.Picture;
+import com.dhht.cloudcat.data.source.PictureDataSource;
+import com.dhht.cloudcat.uploadPicture.UploadPicPresenter;
 import com.dhht.cloudcat.util.AppUtil;
 
 import java.io.File;
@@ -26,6 +28,7 @@ public class ImgFragment extends Fragment implements ImgContract.View {
     PinchImageView iv_action_img;
     Picture picture;
     ImgPresenter mImgPresenter;
+    UploadPicPresenter picPresenter;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -33,6 +36,7 @@ public class ImgFragment extends Fragment implements ImgContract.View {
         View view = inflater.inflate(R.layout.fragment_big_pic, null, false);
         iv_action_img = view.findViewById(R.id.iv_action_img);
         mImgPresenter = new ImgPresenter(this);
+        picPresenter = new UploadPicPresenter(getContext());
         return view;
     }
 
@@ -45,6 +49,7 @@ public class ImgFragment extends Fragment implements ImgContract.View {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        getPresenter().getPicture(picture);
         iv_action_img.setTransitionName("picture" + picture.getName());
         if (picture.getFile() != null) {
             Glide.with(getActivity())
@@ -59,6 +64,25 @@ public class ImgFragment extends Fragment implements ImgContract.View {
         iv_action_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (picture.getRemotePath() == null) {
+                    SnackbarUtil.snkbarWait(iv_action_img, "图片上传中");
+                    picPresenter.uploadPic(picture, new PictureDataSource.SavePicCallBack() {
+                        @Override
+                        public void onSavePic(Picture newPicture) {
+                            if (newPicture != null) {
+                                setPictures(newPicture);
+                                picPresenter.updateLocalPic(newPicture);
+                                iv_action_img.getOnClickListener().onClick(iv_action_img);
+                            } else {
+                                SnackbarUtil.ShortSnackbar(iv_action_img,
+                                        "图片上传失败，请检查网络",
+                                        getResources().getColor(R.color.white),
+                                        getResources().getColor(R.color.colorPrimary)).show();
+                            }
+                        }
+                    });
+                    return;
+                }
                 ClipbordUtil.copyTxt(picture.getRemotePath());
                 SnackbarUtil.ShortSnackbar(iv_action_img,
                         "图片地址已复制到粘贴板",
@@ -96,7 +120,6 @@ public class ImgFragment extends Fragment implements ImgContract.View {
                 "下载完成，图片地址为：" + path,
                 getResources().getColor(R.color.white),
                 getResources().getColor(R.color.colorPrimary)).show();
-        //更新图片到本地
         AppUtil.sendBroadcastToRefresh(new File(path), getActivity());
     }
 
@@ -107,7 +130,6 @@ public class ImgFragment extends Fragment implements ImgContract.View {
                 getResources().getColor(R.color.white),
                 getResources().getColor(R.color.colorPrimary)).show();
     }
-
 
     @Override
     public ImgPresenter getPresenter() {
