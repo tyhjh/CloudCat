@@ -111,7 +111,6 @@
 
             </LinearLayout>
 
-
             <LinearLayout
                 android:id="@+id/ll_wallpaper"
                 android:layout_width="match_parent"

@@ -16,7 +16,13 @@ public class UiUtil {
     }
 
 
-    //获取bitmap颜色
+    /**
+     * 获取bitmap颜色
+     *
+     * @param bitmap
+     * @param color
+     * @return
+     */
     public static Palette.Swatch getColor(Bitmap bitmap, int color) {
         // Palette的部分
         Palette palette = Palette.generate(bitmap);

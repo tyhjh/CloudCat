@@ -2,20 +2,16 @@ package com.dhht.cloudcat.welcome;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.os.PersistableBundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.dhht.cloudcat.R;
 import com.dhht.cloudcat.app.MyApplication;
-import com.dhht.cloudcat.app.User;
 import com.dhht.cloudcat.showPictures.PicturesActivity;
 
 import permison.PermissonUtil;
 import permison.listener.PermissionListener;
-import toast.ToastUtil;
-import util.ScreenUtil;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -26,6 +22,20 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
     }
+
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+
 
     @Override
     protected void onResume() {

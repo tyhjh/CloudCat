@@ -86,8 +86,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
     }
 
     private void initView() {
-        tvTag = findViewById(R.id.tv_tag);
-        FrameLayout fl_main = findViewById(R.id.fl_main);
+        tvTag = findViewById(R.id.tvTag);
         nvView = findViewById(R.id.nv_view);
         UiUtil.disableNavigationViewScrollbars(nvView);
         drawer = findViewById(R.id.drawer_layout);
@@ -126,7 +125,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
                 .statusDark(true)
                 .statusDrawable(getResources().getDrawable(R.drawable.colorPrimary))
                 .create()
-                .drawableBarDrawer(drawer, fl_main, nvView);
+                .drawableBarDrawer(drawer, findViewById(R.id.clRoot), nvView);
         llTags = nvView.getHeaderView(0).findViewById(R.id.ll_tags);
         for (int i = 0; i < llTags.getChildCount(); i++) {
             final int finalI = i;
@@ -154,14 +153,14 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
         tvSignature.setTextColor(txtColor);
         tvUserName.setTextColor(txtColor);
         tvUserName.setText(userName);
-        findViewById(R.id.fab_add).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.fabAdd).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PicturePickUtil.setCreatNewFile(false);
                 showChooseWayView();
             }
         });
-        ivAvatar = findViewById(R.id.iv_avatar);
+        ivAvatar = findViewById(R.id.ivAvatar);
         Glide.with(PicturesActivity.this)
                 .load(R.drawable.ic_oder_span).
                 apply(RequestOptions.circleCropTransform())
@@ -246,7 +245,7 @@ public class PicturesActivity extends AppCompatActivity implements PicturesContr
      */
     private void initRcycleView() {
         spanCount = SharedPreferencesUtil.getInt(Const.Txt.spanCountTxt, Const.Number.defultSpanCount);
-        rvPictures = findViewById(R.id.rv_pictures);
+        rvPictures = findViewById(R.id.rvPictures);
         mPictureAdapter = new CommonAdapter<Picture>(this, new ArrayList<Picture>(0), R.layout.item_picture) {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override

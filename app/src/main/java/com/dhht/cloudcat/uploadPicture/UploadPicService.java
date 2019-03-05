@@ -50,7 +50,6 @@ public class UploadPicService extends Service {
                                                     if (newPicture != null) {
                                                         picPresenter.updateLocalPic(newPicture);
                                                     }
-
                                                 }
                                             });
                                         }
